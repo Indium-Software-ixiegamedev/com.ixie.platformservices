@@ -1,0 +1,26 @@
+{
+    "name": "Ixie.PlatformServices.UnityIap",
+    "rootNamespace": "PlatformServices.Iap",
+    "references": [
+        "Ixie.PlatformServices",
+        "UnityEngine.Purchasing"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "PLATFORMSERVICES_UNITY_IAP",
+        "PLATFORMSERVICES_IAP_ENABLED"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.unity.purchasing",
+            "expression": "5.0.0",
+            "define": "PLATFORMSERVICES_UNITY_IAP"
+        }
+    ],
+    "noEngineReferences": false
+}

@@ -1,0 +1,22 @@
+{
+  "name": "com.ixie.platformservices",
+  "version": "0.1.0",
+  "displayName": "Platform Services",
+  "description": "Unified platform services layer for Unity, covering analytics, auth, IAP, remote config, cloud save, consent, notifications and more.",
+  "unity": "6000.3",
+  "author": {
+    "name": "Ixie"
+  },
+  "keywords": [
+    "ixie",
+    "platform",
+    "services"
+  ],
+  "samples": [
+    {
+      "displayName": "Platform Services Basics",
+      "description": "Composes the platform, uses Firebase features, and adds a custom feature through an installer.",
+      "path": "Samples~/PlatformServicesBasics"
+    }
+  ]
+}

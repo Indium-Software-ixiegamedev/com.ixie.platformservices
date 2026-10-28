@@ -1,0 +1,19 @@
+{
+    "name": "Ixie.PlatformServices.Firebase",
+    "rootNamespace": "PlatformServices.Firebase",
+    "references": [
+        "Ixie.PlatformServices"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "PLATFORMSERVICES_FIREBASE",
+        "PLATFORMSERVICES_FIREBASE_ENABLED"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
