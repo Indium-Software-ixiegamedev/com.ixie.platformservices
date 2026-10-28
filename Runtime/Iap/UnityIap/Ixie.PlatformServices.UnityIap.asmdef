@@ -3,7 +3,7 @@
     "rootNamespace": "PlatformServices.Iap",
     "references": [
         "Ixie.PlatformServices",
-        "UnityEngine.Purchasing"
+        "Unity.Purchasing"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

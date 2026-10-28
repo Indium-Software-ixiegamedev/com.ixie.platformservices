@@ -51,6 +51,17 @@ namespace PlatformServices.EditorSupport
             RememberApplied();
         }
 
+        /// <summary>Turns an option off and saves it, for when its SDK or package is no longer in the project.</summary>
+        public static void DisableOption(string define, string reason)
+        {
+            if (!PlatformServicesDefines.IsDefined(define))
+                return;
+
+            UnityEngine.Debug.LogWarning("[PlatformServices] Disabled " + define + " because " + reason + ".");
+            PlatformServicesDefines.SetDefined(define, false);
+            SaveCurrent();
+        }
+
         private static void ApplyFromFile(bool force)
         {
             if (!File.Exists(FilePath))

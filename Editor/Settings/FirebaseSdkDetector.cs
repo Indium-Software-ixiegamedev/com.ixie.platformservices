@@ -42,7 +42,11 @@ namespace PlatformServices.EditorSupport
 
         public static void Sync()
         {
-            PlatformServicesDefines.SetDefined(PlatformServicesDefines.FirebaseSdk, FindMissingAssemblies().Count == 0);
+            IReadOnlyList<string> missing = FindMissingAssemblies();
+            PlatformServicesDefines.SetDefined(PlatformServicesDefines.FirebaseSdk, missing.Count == 0);
+
+            if (missing.Count > 0)
+                PlatformServicesSettingsStore.DisableOption(PlatformServicesDefines.FirebaseEnabled, "the Firebase SDK is missing (" + string.Join(", ", missing) + ")");
         }
 
         private static bool ContainsDll(string assemblyName)

@@ -7,9 +7,6 @@ namespace PlatformServices.EditorSupport
 {
     internal static class PlatformServicesSettingsProvider
     {
-        private const string IapPackageName = "com.unity.purchasing";
-        private const int MinimumIapMajorVersion = 5;
-
         private static string[] missingFirebaseAssemblies = Array.Empty<string>();
         private static string iapPackageVersion;
 
@@ -28,7 +25,7 @@ namespace PlatformServices.EditorSupport
         private static void Refresh()
         {
             missingFirebaseAssemblies = FirebaseSdkDetector.FindMissingAssemblies().ToArray();
-            iapPackageVersion = FindIapPackageVersion();
+            iapPackageVersion = IapPackageDetector.FindVersion();
         }
 
         private static void Draw()
@@ -71,7 +68,7 @@ namespace PlatformServices.EditorSupport
 
             bool iapInstalled = iapPackageVersion != null;
             if (!iapInstalled)
-                EditorGUILayout.HelpBox("Unity IAP " + MinimumIapMajorVersion + " or later (" + IapPackageName + ") is not installed.", MessageType.Warning);
+                EditorGUILayout.HelpBox("Unity IAP " + IapPackageDetector.MinimumMajorVersion + " or later (" + IapPackageDetector.PackageName + ") is not installed.", MessageType.Warning);
             else
                 EditorGUILayout.HelpBox("Unity IAP " + iapPackageVersion + " detected.", MessageType.Info);
 
@@ -94,17 +91,6 @@ namespace PlatformServices.EditorSupport
                     PlatformServicesSettingsStore.SaveCurrent();
                 }
             }
-        }
-
-        private static string FindIapPackageVersion()
-        {
-            UnityEditor.PackageManager.PackageInfo package = UnityEditor.PackageManager.PackageInfo.GetAllRegisteredPackages()
-                .FirstOrDefault(info => info.name == IapPackageName);
-            if (package == null)
-                return null;
-
-            string numeric = package.version.Split('-')[0];
-            return Version.TryParse(numeric, out Version version) && version.Major >= MinimumIapMajorVersion ? package.version : null;
         }
     }
 }

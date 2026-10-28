@@ -74,6 +74,7 @@ The **Project Settings > Ixie Platform Services** page shows detection status (i
 
 Notes:
 
+- If the Firebase SDK DLLs or the Unity IAP package (`IapPackageDetector`) are removed, the matching enable toggle is switched off automatically, a warning is logged, and the change is saved to the shared settings file.
 - IAP does not depend on Firebase for receipt validation. Supply your own `IReceiptValidator` by overriding `PlatformService.CreateReceiptValidator()` (or passing `receiptValidator` to `CreateProduction`); when none is supplied and Firebase is enabled, `FirebaseFunctionReceiptValidator` is used as the default. IAP still needs an `IAuthService` feature to bind purchases to a player.
 - The Firebase assembly is an asmdef and cannot see script-source plugins that compile into `Assembly-CSharp`. The Google Sign-In and Play Games adapters (behind `GOOGLE_SIGN_IN` and `GOOGLE_PLAY_GAMES`) need those plugins as DLLs or asmdefs; if they are asmdefs, add them to the Firebase asmdef references.
 
