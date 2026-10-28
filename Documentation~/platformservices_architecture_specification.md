@@ -70,11 +70,11 @@ Optional assemblies are controlled by scripting define symbols. An assembly comp
 
 `Ixie.PlatformServices.Firebase` requires `PLATFORMSERVICES_FIREBASE` and `PLATFORMSERVICES_FIREBASE_ENABLED`. `Ixie.PlatformServices.UnityIap` requires `PLATFORMSERVICES_UNITY_IAP` and `PLATFORMSERVICES_IAP_ENABLED`.
 
-The **Project Settings > Ixie Platform Services** page shows detection status (including any missing Firebase assemblies and the detected Unity IAP version) and provides the two enable toggles. A toggle is disabled until its SDK is detected, and changing it updates the defines for the Standalone, Server, iOS, Android, and WebGL build targets and triggers a recompile. `FirebaseSdkDetector` re-evaluates `PLATFORMSERVICES_FIREBASE` on domain reload and whenever a Firebase DLL is imported, deleted, or moved.
+The **Project Settings > Ixie Platform Services** page shows detection status (including any missing Firebase assemblies and the detected Unity IAP version) and provides the two enable toggles. A toggle is disabled until its SDK is detected, and changing it updates the defines for the Standalone, Server, iOS, Android, and WebGL build targets and triggers a recompile. The two toggles are also saved to `ProjectSettings/IxiePlatformServices.json`, which should be committed. `PlatformServicesSettingsStore` re-applies that file to the defines on editor load and whenever the editor regains focus after the file changed (for example after a git pull), creating the file from the current defines if it is missing. `FirebaseSdkDetector` re-evaluates `PLATFORMSERVICES_FIREBASE` on domain reload and whenever a Firebase DLL is imported, deleted, or moved.
 
 Notes:
 
-- IAP receipt validation is provided by the Firebase integration, so IAP requires Firebase to be enabled as well.
+- IAP does not depend on Firebase for receipt validation. Supply your own `IReceiptValidator` by overriding `PlatformService.CreateReceiptValidator()` (or passing `receiptValidator` to `CreateProduction`); when none is supplied and Firebase is enabled, `FirebaseFunctionReceiptValidator` is used as the default. IAP still needs an `IAuthService` feature to bind purchases to a player.
 - The Firebase assembly is an asmdef and cannot see script-source plugins that compile into `Assembly-CSharp`. The Google Sign-In and Play Games adapters (behind `GOOGLE_SIGN_IN` and `GOOGLE_PLAY_GAMES`) need those plugins as DLLs or asmdefs; if they are asmdefs, add them to the Firebase asmdef references.
 
 ### 3.3 Composition
@@ -104,15 +104,15 @@ PlatformServiceCore / IPlatformService
         |   |   +-- GoogleAccountAuthProviderAdapter
         |   |   `-- AppleAuthProviderAdapter
         |   +-- FirestoreCloudSaveService / ICloudSaveService
-        |   `-- publishes FirebaseFunctionReceiptValidator as options.ReceiptValidator
+        |   `-- publishes FirebaseFunctionReceiptValidator as options.ReceiptValidator (only if none was supplied)
         |
         `-- UnityIapPlatformFeatureInstaller (Order 200)
             `-- UnityIapService / IIapService (needs a catalog and a receipt validator)
                 +-- Unity IAP StoreController
-                `-- IReceiptValidator (FirebaseFunctionReceiptValidator)
+                `-- IReceiptValidator (developer-supplied, or FirebaseFunctionReceiptValidator by default)
 ```
 
-`CreateProduction(googleWebClientId, enableIntegrityCheck, integrityConfiguration, appCheckConfiguration, iapProductCatalog)` builds a `PlatformServiceOptions` object, registers `IntegrityService` first when `enableIntegrityCheck` is true, and then runs every installer in `PlatformFeatureInstallerRegistry` in ascending `Order`. Installers receive the `IPlatformService` and the options; `PlatformServiceOptions.ReceiptValidator` is how the Firebase installer hands a validator to the IAP installer. There is no `enableIap` parameter: IAP is registered when the IAP assembly is enabled and `iapProductCatalog` is supplied (a missing catalog logs a warning and skips IAP).
+`CreateProduction(googleWebClientId, enableIntegrityCheck, integrityConfiguration, appCheckConfiguration, iapProductCatalog, receiptValidator)` builds a `PlatformServiceOptions` object, registers `IntegrityService` first when `enableIntegrityCheck` is true, and then runs every installer in `PlatformFeatureInstallerRegistry` in ascending `Order`. Installers receive the `IPlatformService` and the options; `PlatformServiceOptions.ReceiptValidator` carries the developer-supplied validator to the IAP installer; the Firebase installer fills it with its own validator only when it is still null. There is no `enableIap` parameter: IAP is registered when the IAP assembly is enabled and `iapProductCatalog` is supplied (a missing catalog logs a warning and skips IAP).
 
 When the Firebase assembly is not compiled, only Integrity is registered by default, and `GetFeature<IAuthService>()` and similar calls return `null`. When `enableIntegrityCheck` is false, both `IntegrityService` and `FirebaseAppCheckService` are omitted; Firebase and Auth remain registered.
 
@@ -253,7 +253,7 @@ Turning `enableIntegrityCheck` off skips both local checks and Firebase App Chec
 
 ### 5.3 In-App Purchasing
 
-Unity IAP is version 5.4.3 in this project. IAP is controlled by **Project Settings > Ixie Platform Services** (`PLATFORMSERVICES_IAP_ENABLED`); there is no runtime `enableIap` flag. When enabled, and an `IapProductCatalog` is passed to `CreateProduction`, `UnityIapPlatformFeatureInstaller` registers `UnityIapService` after Firebase Auth and App Check, using the validator the Firebase installer publishes as `PlatformServiceOptions.ReceiptValidator`. It requires a valid `IapProductCatalog`, an initialized App Check service, and a signed-in player before purchases can start. Store connection failure is exposed through `IIapService.IsStoreReady` and `LastError` without failing the whole platform startup. Backend source and detailed setup instructions are in `functions/` and `Docs/iap-production-guide.md`; no Firebase project has been selected or deployed from this repository.
+Unity IAP is version 5.4.3 in this project. IAP is controlled by **Project Settings > Ixie Platform Services** (`PLATFORMSERVICES_IAP_ENABLED`); there is no runtime `enableIap` flag. When enabled, and an `IapProductCatalog` is passed to `CreateProduction`, `UnityIapPlatformFeatureInstaller` registers `UnityIapService` after Firebase Auth and App Check, using the validator from `PlatformServiceOptions.ReceiptValidator` (supplied through `PlatformService.CreateReceiptValidator()` or `CreateProduction`, falling back to the Firebase validator when Firebase is enabled). It requires a valid `IapProductCatalog`, an initialized App Check service, and a signed-in player before purchases can start. Store connection failure is exposed through `IIapService.IsStoreReady` and `LastError` without failing the whole platform startup. Backend source and detailed setup instructions are in `functions/` and `Docs/iap-production-guide.md`; no Firebase project has been selected or deployed from this repository.
 
 Shloka tracks must be configured as store non-consumables. `IapProductCatalog` maps each canonical product ID to Apple/Google store IDs and one or more permanent entitlement IDs. The game checks `IIapService.HasEntitlement(entitlementId)` or listens to `EntitlementsChanged`; ownership is not inferred from local preferences or a client-only store callback.
 

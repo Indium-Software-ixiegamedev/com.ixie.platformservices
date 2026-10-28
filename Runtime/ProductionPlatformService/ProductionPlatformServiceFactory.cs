@@ -12,12 +12,14 @@ namespace PlatformServices.Production
         /// <summary>
         /// Creates the production platform composition. Integrity is registered first, then every installer
         /// contributed by an enabled optional assembly (Firebase, Unity IAP) in installer order.
-        /// IAP is registered only when the IAP service is enabled in Project Settings and a catalog is supplied.
+        /// IAP is registered only when the IAP service is enabled in Project Settings, a catalog is supplied, and a receipt
+        /// validator is available (<paramref name="receiptValidator"/>, or the Firebase default when Firebase is enabled).
         /// </summary>
         public static PlatformServiceCore CreateProduction(string googleWebClientId = null, bool enableIntegrityCheck = true,
             IntegrityConfiguration integrityConfiguration = null,
             AppCheckConfiguration appCheckConfiguration = null,
-            IapProductCatalog iapProductCatalog = null)
+            IapProductCatalog iapProductCatalog = null,
+            IReceiptValidator receiptValidator = null)
         {
             PlatformServiceCore platform = new PlatformServiceCore(new UnityLogService());
 
@@ -30,7 +32,8 @@ namespace PlatformServices.Production
                     ExpectedApplicationIdentifier = Application.identifier
                 },
                 AppCheckConfiguration = appCheckConfiguration ?? new AppCheckConfiguration(),
-                IapProductCatalog = iapProductCatalog
+                IapProductCatalog = iapProductCatalog,
+                ReceiptValidator = receiptValidator
             };
 
             if (enableIntegrityCheck)

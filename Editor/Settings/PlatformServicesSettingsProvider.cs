@@ -45,7 +45,7 @@ namespace PlatformServices.EditorSupport
                 FirebaseSdkDetector.Sync();
             }
 
-            EditorGUILayout.HelpBox("Changing these options updates the scripting define symbols and triggers a script recompile.", MessageType.None);
+            EditorGUILayout.HelpBox("Changing these options updates the scripting define symbols, saves them to ProjectSettings/IxiePlatformServices.json (commit this file to share them with the team), and triggers a script recompile.", MessageType.None);
         }
 
         private static void DrawFirebase()
@@ -78,7 +78,7 @@ namespace PlatformServices.EditorSupport
             DrawToggle("Enable IAP platform service", PlatformServicesDefines.IapEnabled, iapInstalled);
 
             if (PlatformServicesDefines.IsDefined(PlatformServicesDefines.IapEnabled) && !PlatformServicesDefines.IsDefined(PlatformServicesDefines.FirebaseEnabled))
-                EditorGUILayout.HelpBox("IAP receipt validation is provided by the Firebase integration. Enable Firebase platform services too.", MessageType.Warning);
+                EditorGUILayout.HelpBox("Firebase is not enabled, so IAP has no default receipt validator. Override PlatformService.CreateReceiptValidator() to supply your own IReceiptValidator.", MessageType.Info);
         }
 
         private static void DrawToggle(string label, string define, bool canEnable)
@@ -89,7 +89,10 @@ namespace PlatformServices.EditorSupport
                 EditorGUI.BeginChangeCheck();
                 bool next = EditorGUILayout.ToggleLeft(new GUIContent(label, "Defines " + define), current);
                 if (EditorGUI.EndChangeCheck())
+                {
                     PlatformServicesDefines.SetDefined(define, next);
+                    PlatformServicesSettingsStore.SaveCurrent();
+                }
             }
         }
 

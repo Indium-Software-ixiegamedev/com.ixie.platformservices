@@ -72,6 +72,9 @@ namespace PlatformServices.Core
             initializationTask = InitializePlatformServicesAsync(cancellationTokenSource.Token);
         }
 
+        /// <summary>Override to supply the IAP receipt validator; returning null uses the Firebase default when Firebase is enabled.</summary>
+        protected virtual IReceiptValidator CreateReceiptValidator() => null;
+
         protected virtual async Task<bool> InitializePlatformServicesAsync(CancellationToken cancellationToken)
         {
             platformServiceCore = ProductionPlatformServiceFactory.CreateProduction(
@@ -87,7 +90,8 @@ namespace PlatformServices.Core
                     AllowDevelopmentBuild = allowDevelopmentBuild
                 },
                 new AppCheckConfiguration(),
-                iapProductCatalog);
+                iapProductCatalog,
+                CreateReceiptValidator());
 
             bool initialized = await platformServiceCore.InitializeAsync(cancellationToken);
             if (!initialized)

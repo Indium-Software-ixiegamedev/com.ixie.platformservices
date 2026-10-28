@@ -13,7 +13,7 @@ namespace PlatformServices.Core
         public AppCheckConfiguration AppCheckConfiguration { get; set; }
         public IapProductCatalog IapProductCatalog { get; set; }
 
-        /// <summary>Set by a backend installer; consumed by the IAP installer to verify purchases.</summary>
+        /// <summary>Developer-supplied validator consumed by the IAP installer; backend installers may only fill it in when null.</summary>
         public IReceiptValidator ReceiptValidator { get; set; }
     }
 }

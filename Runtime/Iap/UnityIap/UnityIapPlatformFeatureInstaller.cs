@@ -30,13 +30,20 @@ namespace PlatformServices.Iap
 
             if (options.ReceiptValidator == null)
             {
-                Debug.LogError("[PlatformServices] IAP needs a receipt validator, which is provided by the Firebase integration; IAP was not registered.");
+                Debug.LogError("[PlatformServices] IAP needs an IReceiptValidator; supply one through PlatformServiceOptions.ReceiptValidator (PlatformService.CreateReceiptValidator) or enable the Firebase integration for its default. IAP was not registered.");
+                return;
+            }
+
+            IAuthService auth = platform.GetFeature<IAuthService>();
+            if (auth == null)
+            {
+                Debug.LogError("[PlatformServices] IAP needs an IAuthService to bind purchases to a player; IAP was not registered.");
                 return;
             }
 
             platform.RegisterFeature(new UnityIapService(
                 options.IapProductCatalog,
-                platform.GetFeature<IAuthService>(),
+                auth,
                 platform.GetFeature<IAppCheckService>(),
                 options.ReceiptValidator));
         }

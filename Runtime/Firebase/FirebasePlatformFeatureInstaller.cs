@@ -43,7 +43,8 @@ namespace PlatformServices.Firebase
 
             platform.RegisterFeature(new FirestoreCloudSaveService(firebase));
 
-            options.ReceiptValidator = new FirebaseFunctionReceiptValidator(firebase);
+            if (options.ReceiptValidator == null)
+                options.ReceiptValidator = new FirebaseFunctionReceiptValidator(firebase);
         }
 
         private static IAppCheckProviderConfigurator CreateAppCheckProviderConfigurator(AppCheckConfiguration configuration)
