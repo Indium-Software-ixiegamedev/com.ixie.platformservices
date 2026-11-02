@@ -3,7 +3,7 @@ using PlatformServices.Auth;
 using PlatformServices.Core;
 using PlatformServices.Production;
 using UnityEngine;
-#if PLATFORMSERVICES_FIREBASE && PLATFORMSERVICES_FIREBASE_ENABLED
+#if PLATFORMSERVICES_FIREBASE_ENABLED
 using PlatformServices.Firebase;
 #endif
 
@@ -41,7 +41,7 @@ namespace PlatformServices.Samples
             if (auth != null && !auth.IsAuthenticated)
                 await auth.SignInAsync(AuthProviderType.Guest);
 
-#if PLATFORMSERVICES_FIREBASE && PLATFORMSERVICES_FIREBASE_ENABLED
+#if PLATFORMSERVICES_FIREBASE_ENABLED
             IFirebaseService firebase = platform.GetFeature<IFirebaseService>();
             Debug.Log("Firebase available: " + (firebase != null && firebase.IsAvailable));
 #endif
@@ -51,7 +51,7 @@ namespace PlatformServices.Samples
         {
             PlatformServiceCore manual = new PlatformServiceCore(new UnityLogService());
 
-#if PLATFORMSERVICES_FIREBASE && PLATFORMSERVICES_FIREBASE_ENABLED
+#if PLATFORMSERVICES_FIREBASE_ENABLED
             // Registration order is initialization order: Firebase first, then features that depend on it.
             IFirebaseService firebase = new FirebaseService();
             manual.RegisterFeature(firebase);

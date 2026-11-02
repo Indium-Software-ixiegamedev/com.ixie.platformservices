@@ -12,15 +12,8 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [
-        "PLATFORMSERVICES_UNITY_IAP",
         "PLATFORMSERVICES_IAP_ENABLED"
     ],
-    "versionDefines": [
-        {
-            "name": "com.unity.purchasing",
-            "expression": "5.0.0",
-            "define": "PLATFORMSERVICES_UNITY_IAP"
-        }
-    ],
+    "versionDefines": [],
     "noEngineReferences": false
 }

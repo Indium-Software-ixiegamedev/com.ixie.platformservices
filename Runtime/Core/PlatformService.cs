@@ -7,7 +7,7 @@ using PlatformServices.Auth;
 using PlatformServices.Production;
 using PlatformServices.CloudSave;
 using PlatformServices.Consent;
-#if PLATFORMSERVICES_FIREBASE && PLATFORMSERVICES_FIREBASE_ENABLED
+#if PLATFORMSERVICES_FIREBASE_ENABLED
 using PlatformServices.Firebase;
 #endif
 using PlatformServices.Integrity;
@@ -50,7 +50,7 @@ namespace PlatformServices.Core
 
         public IPlatformService Core => platformServiceCore;
         public IConsentService Consent => platformServiceCore?.GetFeature<IConsentService>();
-    #if PLATFORMSERVICES_FIREBASE && PLATFORMSERVICES_FIREBASE_ENABLED
+    #if PLATFORMSERVICES_FIREBASE_ENABLED
         public IFirebaseService Firebase => platformServiceCore?.GetFeature<IFirebaseService>();
     #endif
         public IAppCheckService AppCheck => platformServiceCore?.GetFeature<IAppCheckService>();

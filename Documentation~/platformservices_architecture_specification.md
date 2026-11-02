@@ -63,18 +63,15 @@ Optional assemblies are controlled by scripting define symbols. An assembly comp
 
 | Define | Set by | Meaning |
 | --- | --- | --- |
-| `PLATFORMSERVICES_FIREBASE` | Automatically, by `FirebaseSdkDetector` | `Firebase.App`, `Firebase.Auth`, `Firebase.Firestore`, and `Firebase.Functions` DLLs are in the project (`.unitypackage` or UPM) |
 | `PLATFORMSERVICES_FIREBASE_ENABLED` | Manually, in Project Settings | Compile the Firebase platform services |
-| `PLATFORMSERVICES_UNITY_IAP` | `versionDefines` in the Unity IAP asmdef | `com.unity.purchasing` 5.0.0 or later is installed |
 | `PLATFORMSERVICES_IAP_ENABLED` | Manually, in Project Settings | Compile the Unity IAP platform service |
 
-`Ixie.PlatformServices.Firebase` requires `PLATFORMSERVICES_FIREBASE` and `PLATFORMSERVICES_FIREBASE_ENABLED`. `Ixie.PlatformServices.UnityIap` requires `PLATFORMSERVICES_UNITY_IAP` and `PLATFORMSERVICES_IAP_ENABLED`.
+`Ixie.PlatformServices.Firebase` requires `PLATFORMSERVICES_FIREBASE_ENABLED`. `Ixie.PlatformServices.UnityIap` requires `PLATFORMSERVICES_IAP_ENABLED`. SDKs are not detected: enabling a toggle compiles the code, and compile errors appear if the Firebase SDK or Unity IAP package is not imported.
 
-The **Project Settings > Ixie Platform Services** page shows detection status (including any missing Firebase assemblies and the detected Unity IAP version) and provides the two enable toggles. A toggle is disabled until its SDK is detected, and changing it updates the defines for the Standalone, Server, iOS, Android, and WebGL build targets and triggers a recompile. The two toggles are also saved to `ProjectSettings/IxiePlatformServices.json`, which should be committed. `PlatformServicesSettingsStore` re-applies that file to the defines on editor load and whenever the editor regains focus after the file changed (for example after a git pull), creating the file from the current defines if it is missing. `FirebaseSdkDetector` re-evaluates `PLATFORMSERVICES_FIREBASE` on domain reload and whenever a Firebase DLL is imported, deleted, or moved.
+The **Project Settings > Ixie Platform Services** page provides the two enable toggles. Changing a toggle updates the defines for the Standalone, Server, iOS, Android, and WebGL build targets and triggers a recompile. The two toggles are also saved to `ProjectSettings/IxiePlatformServices.json`, which should be committed. `PlatformServicesSettingsStore` re-applies that file to the defines on editor load and whenever the editor regains focus after the file changed (for example after a git pull), creating the file from the current defines if it is missing.
 
 Notes:
 
-- If the Firebase SDK DLLs or the Unity IAP package (`IapPackageDetector`) are removed, the matching enable toggle is switched off automatically, a warning is logged, and the change is saved to the shared settings file.
 - IAP does not depend on Firebase for receipt validation. Supply your own `IReceiptValidator` by overriding `PlatformService.CreateReceiptValidator()` (or passing `receiptValidator` to `CreateProduction`); when none is supplied and Firebase is enabled, `FirebaseFunctionReceiptValidator` is used as the default. IAP still needs an `IAuthService` feature to bind purchases to a player.
 - The Firebase assembly is an asmdef and cannot see script-source plugins that compile into `Assembly-CSharp`. The Google Sign-In and Play Games adapters (behind `GOOGLE_SIGN_IN` and `GOOGLE_PLAY_GAMES`) need those plugins as DLLs or asmdefs; if they are asmdefs, add them to the Firebase asmdef references.
 
@@ -142,7 +139,7 @@ public sealed class MyInstaller : IPlatformFeatureInstaller
 }
 ```
 
-The `PlatformServicesBasics` sample (Package Manager > Platform Services > Samples) demonstrates this, plus manual composition without `CreateProduction`. Code that touches Firebase types should be wrapped in `#if PLATFORMSERVICES_FIREBASE && PLATFORMSERVICES_FIREBASE_ENABLED`.
+The `PlatformServicesBasics` sample (Package Manager > Platform Services > Samples) demonstrates this, plus manual composition without `CreateProduction`. Code that touches Firebase types should be wrapped in `#if PLATFORMSERVICES_FIREBASE_ENABLED`.
 
 The project uses its existing `ServiceLocator` to expose the `PlatformService` MonoBehaviour to game systems. `PlatformServiceCore` itself remains a plain C# composition root and does not depend on the service locator.
 
@@ -583,7 +580,6 @@ ExternalPlugins/com.ixie.platformservices/
 |       `-- Testing/TestingFirebaseService.cs    (editor only)
 |-- Editor/                                      (Ixie.PlatformServices.Editor)
 |   |-- Settings/
-|   |   |-- FirebaseSdkDetector.cs
 |   |   |-- PlatformServicesDefines.cs
 |   |   `-- PlatformServicesSettingsProvider.cs
 |   `-- Testing/TestingPlatformServices.cs

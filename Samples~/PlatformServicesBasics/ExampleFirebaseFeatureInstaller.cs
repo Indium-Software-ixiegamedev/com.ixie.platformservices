@@ -1,4 +1,4 @@
-#if PLATFORMSERVICES_FIREBASE && PLATFORMSERVICES_FIREBASE_ENABLED
+#if PLATFORMSERVICES_FIREBASE_ENABLED
 using System.Threading;
 using System.Threading.Tasks;
 using PlatformServices.Core;
