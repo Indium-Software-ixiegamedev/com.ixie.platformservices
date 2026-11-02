@@ -40,8 +40,6 @@ namespace PlatformServices.Samples
         [SerializeField] private bool allowDevelopmentBuild;
 
         [Header("In-App Purchasing")]
-        [Tooltip("Enables the production Unity IAP flow. Requires an IAP product catalog, Firebase App Check, signed-in players, and deployed server-side purchase verification functions.")]
-        [SerializeField] private bool enableIap;
         [Tooltip("Catalog of canonical product IDs, platform store SKUs, and backend-owned entitlement IDs. Game-facing IAPProductDataSO IDs must match each catalog canonical ProductId.")]
         [SerializeField] private IapProductCatalog iapProductCatalog;
 
