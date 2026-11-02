@@ -7,6 +7,7 @@ using PlatformServices.Auth;
 using PlatformServices.Production;
 using PlatformServices.CloudSave;
 using PlatformServices.Consent;
+using PlatformServices.Core;
 #if PLATFORMSERVICES_FIREBASE_ENABLED
 using PlatformServices.Firebase;
 #endif
@@ -15,7 +16,7 @@ using PlatformServices.Iap;
 using PlatformServices.RemoteConfig;
 using UnityEngine;
 
-namespace PlatformServices.Core
+namespace PlatformServices.Samples
 {
     public class PlatformService : MonoBehaviour
     {

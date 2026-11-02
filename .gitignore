@@ -6,7 +6,6 @@
 # (Adjust these folder names if your sample project uses a different name)
 /[Tt]est[Pp]roject/
 /[Ee]xample[Pp]roject/
-/[Ss]amples~/
 
 # Ignore Package Manager runtime caches generated locally
 .Modules/

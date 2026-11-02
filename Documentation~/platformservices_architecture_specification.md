@@ -584,7 +584,7 @@ ExternalPlugins/com.ixie.platformservices/
 |   |   `-- PlatformServicesSettingsProvider.cs
 |   `-- Testing/TestingPlatformServices.cs
 |-- Samples~/PlatformServicesBasics/
-|   |-- PlatformServicesBootstrap.cs
+|   |-- PlatformService.cs
 |   `-- ExampleFirebaseFeatureInstaller.cs
 `-- Documentation~/platformservices_architecture_specification.md
 ```
