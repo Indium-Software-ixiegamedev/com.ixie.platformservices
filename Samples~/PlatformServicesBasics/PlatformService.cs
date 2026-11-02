@@ -7,7 +7,8 @@ using PlatformServices.Auth;
 using PlatformServices.Production;
 using PlatformServices.CloudSave;
 using PlatformServices.Consent;
-#if PLATFORMSERVICES_FIREBASE && PLATFORMSERVICES_FIREBASE_ENABLED
+using PlatformServices.Core;
+#if PLATFORMSERVICES_FIREBASE_ENABLED
 using PlatformServices.Firebase;
 #endif
 using PlatformServices.Integrity;
@@ -15,7 +16,7 @@ using PlatformServices.Iap;
 using PlatformServices.RemoteConfig;
 using UnityEngine;
 
-namespace PlatformServices.Core
+namespace PlatformServices.Samples
 {
     public class PlatformService : MonoBehaviour
     {
@@ -50,7 +51,7 @@ namespace PlatformServices.Core
 
         public IPlatformService Core => platformServiceCore;
         public IConsentService Consent => platformServiceCore?.GetFeature<IConsentService>();
-    #if PLATFORMSERVICES_FIREBASE && PLATFORMSERVICES_FIREBASE_ENABLED
+    #if PLATFORMSERVICES_FIREBASE_ENABLED
         public IFirebaseService Firebase => platformServiceCore?.GetFeature<IFirebaseService>();
     #endif
         public IAppCheckService AppCheck => platformServiceCore?.GetFeature<IAppCheckService>();

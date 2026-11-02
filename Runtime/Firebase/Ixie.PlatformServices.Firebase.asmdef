@@ -2,7 +2,8 @@
     "name": "Ixie.PlatformServices.Firebase",
     "rootNamespace": "PlatformServices.Firebase",
     "references": [
-        "Ixie.PlatformServices"
+        "Ixie.PlatformServices",
+        "Firebase.Functions"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -11,7 +12,6 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [
-        "PLATFORMSERVICES_FIREBASE",
         "PLATFORMSERVICES_FIREBASE_ENABLED"
     ],
     "versionDefines": [],

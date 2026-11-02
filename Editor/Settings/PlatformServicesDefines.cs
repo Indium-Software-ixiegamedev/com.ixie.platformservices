@@ -7,8 +7,6 @@ namespace PlatformServices.EditorSupport
 {
     internal static class PlatformServicesDefines
     {
-        /// <summary>Set automatically when the Firebase SDK assemblies are present in the project.</summary>
-        public const string FirebaseSdk = "PLATFORMSERVICES_FIREBASE";
         /// <summary>Set manually from Project Settings to compile the Firebase platform services.</summary>
         public const string FirebaseEnabled = "PLATFORMSERVICES_FIREBASE_ENABLED";
         /// <summary>Set manually from Project Settings to compile the Unity IAP platform service.</summary>
