@@ -2,7 +2,8 @@
     "name": "Ixie.PlatformServices.Firebase",
     "rootNamespace": "PlatformServices.Firebase",
     "references": [
-        "Ixie.PlatformServices"
+        "Ixie.PlatformServices",
+        "Firebase.Functions"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
